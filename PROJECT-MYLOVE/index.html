@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 5th Monthsary, Pypou!</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Welcome Cover Overlay */
+        #welcome-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 1s ease, visibility 1s;
+        }
+        #open-btn {
+            background: #ff3366;
+            color: #fff;
+            border: none;
+            padding: 15px 35px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.6);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        #open-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.9);
+        }
+
+        #animation-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s ease;
+            opacity: 0; 
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Center Photo Slideshow Frame */
+        #photo-frame {
+            position: relative;
+            width: 180px;  /* Size perfectly calculated to sit inside the text heart */
+            height: 180px;
+            border-radius: 50%; /* Smooth circle photo look */
+            overflow: hidden;
+            border: 4px solid #ff3366;
+            box-shadow: 0 0 25px rgba(255, 51, 102, 0.7);
+            z-index: 5;
+            transform: scale(0);
+            transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #photo-frame.show {
+            transform: scale(1);
+        }
+        .slideshow-img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .slideshow-img.active {
+            opacity: 1;
+        }
+
+        #popup-message {
+            position: absolute;
+            color: #ff3366;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+            max-width: 80%;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            text-shadow: 0 0 20px rgba(255, 51, 102, 0.6);
+            line-height: 1.4;
+            z-index: 10;
+        }
+        #popup-message.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        #bg-video {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="welcome-overlay">
+        <button id="open-btn">❤️ Open Message</button>
+    </div>
+
+    <video id="bg-video" src="ssstik.io_@nrzhn.svg_1783342439287.mp4" loop></video>
+
+    <div id="animation-container">
+        <canvas id="heartCanvas"></canvas>
+        
+        <div id="photo-frame">
+            <img src="photo1.jpg" class="slideshow-img active" alt="Photo 1">
+            <img src="photo2.jpg" class="slideshow-img" alt="Photo 2">
+            <img src="photo3.jpg" class="slideshow-img" alt="Photo 3">
+            <img src="photo4.jpg" class="slideshow-img" alt="Photo 4">
+            <img src="photo5.jpg" class="slideshow-img" alt="Photo 5">
+        </div>
+    </div>
+
+    <div id="popup-message">
+        Happy 15th Monthsary Mylove, ILOVEYOUU!<br>
+        <span style="font-size: 1.8rem; color: #ff6688;">LET'S MEET I'll MAKE YOU WET.</span>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('heartCanvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('animation-container');
+        const popup = document.getElementById('popup-message');
+        
+        const welcomeOverlay = document.getElementById('welcome-overlay');
+        const openBtn = document.getElementById('open-btn');
+        const videoElement = document.getElementById('bg-video');
+        const photoFrame = document.getElementById('photo-frame');
+        const slides = document.querySelectorAll('.slideshow-img');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        let isActivated = false;
+        let tick = 0;
+        let currentSlideIndex = 0;
+        let slideInterval;
+
+        const phrases = ["Happy 5th Monthsary Pypou", "Iloveyou"];
+        const particles = [];
+        const particleCount = 120; 
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        // Starts the photo slideshow rotation
+        function startSlideshow() {
+            slideInterval = setInterval(() => {
+                slides[currentSlideIndex].classList.remove('active');
+                currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+                slides[currentSlideIndex].classList.add('active');
+            }, 2000); // Changes image every 2 seconds
+        }
+
+        openBtn.addEventListener('click', () => {
+            videoElement.play().catch(err => console.log("Video audio block trace: ", err));
+            
+            welcomeOverlay.style.opacity = '0';
+            welcomeOverlay.style.visibility = 'hidden';
+            container.style.opacity = '1';
+            
+            isActivated = true;
+            animate();
+
+            // Pop up the center photo circle slightly after the heart displays
+            setTimeout(() => {
+                photoFrame.classList.add('show');
+                startSlideshow();
+            }, 800);
+
+            // CHANGED: Made duration longer (12 seconds) before transitioning to the final text card
+            setTimeout(() => {
+                clearInterval(slideInterval);
+                container.style.opacity = '0';
+                setTimeout(() => {
+                    popup.classList.add('show');
+                }, 1000); 
+            }, 12000); 
+        });
+
+        function getHeartPoint(t) {
+            // Keep the heart scaled beautifully around the middle frame area
+            const scale = Math.min(width, height) * 0.024; 
+            const x = 16 * Math.pow(Math.sin(t), 3);
+            const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+            return {
+                x: width / 2 + x * scale,
+                y: height / 2 - y * scale 
+            };
+        }
+
+        class TextParticle {
+            constructor(index) {
+                this.text = phrases[Math.floor(Math.random() * phrases.length)];
+                this.t = (index / particleCount) * Math.PI * 2; 
+                this.fontSize = Math.floor(Math.random() * 4) + 12; 
+                this.opacity = Math.random() * 0.5 + 0.5;
+                
+                // Extremely slow floating configuration speeds you approved
+                this.swimSpeed = (Math.random() * 0.002) + 0.001;
+                this.wobbleSpeed = Math.random() * 0.01 + 0.005;
+                this.wobbleRange = Math.random() * 10 + 3; 
+            }
+
+            update(tick) {
+                this.t += this.swimSpeed;
+                const basePos = getHeartPoint(this.t);
+                this.x = basePos.x + Math.sin(tick * this.wobbleSpeed) * this.wobbleRange;
+                this.y = basePos.y + Math.cos(tick * this.wobbleSpeed) * this.wobbleRange;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(255, 30, 80, ${this.opacity})`;
+                ctx.font = `bold ${this.fontSize}px Arial`;
+                ctx.textAlign = "center";
+                ctx.fillText(this.text, this.x, this.y);
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new TextParticle(i));
+        }
+
+        function animate() {
+            if (!isActivated) return;
+
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.25)'; 
+            ctx.fillRect(0, 0, width, height);
+
+            tick++;
+            particles.forEach(p => {
+                p.update(tick);
+                p.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+    </script>
+</body>
+</html>
